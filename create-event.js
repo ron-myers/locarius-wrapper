@@ -21,7 +21,8 @@ async function createEvent({
   city,
   state,
   ticketName,
-  ticketQuantity
+  ticketQuantity,
+  hideFromFeaturedEvents = false,
 }) {
   const browser = await chromium.launch({ headless });
   const context = await browser.newContext();
@@ -125,8 +126,11 @@ async function createEvent({
     await page.getByLabel('Publish Event').click();    
     await page.getByRole('option', { name: 'Published', exact: true }).click();
   
-    await page.click('text="Hide from Featured Events and public searches?"');
-    await page.waitForTimeout(1000);
+    if (hideFromFeaturedEvents) {
+      await page.click('text="Hide from Featured Events and public searches?"');
+      await page.waitForTimeout(1000);
+    }
+
     console.log('Step 12: Event status set to published');
 
     console.log('Step 13: Saving event...');
